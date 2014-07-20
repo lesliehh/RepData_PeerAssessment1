@@ -1,19 +1,62 @@
 # Reproducible Research: Peer Assessment 1
 
-
 ## Loading and preprocessing the data
 
+```{r echo = TRUE}
+setwd("C:/Base/Education/MOOC/Johns Hopkins - Data Science Specialization/Reproducible Research/RepData_PeerAssessment1");
+library("utils")
+unzip("activity.zip", overwrite=TRUE)
+data <- read.csv("activity.csv", header = TRUE, sep = ',')
+```
 
 
 ## What is mean total number of steps taken per day?
 
+```{r}
+aggregate <- as.data.frame(tapply(data$steps, data$date, sum))
+names(aggregate) <- c("total_steps")
+```
+
+```{r}
+summary(aggregate)
+
+plot (
+    x    = as.Date(rownames(aggregate)),
+    y    = aggregate$total_steps,
+    type = "h",
+    xlab = "Date",
+    ylab = "Total Steps"
+)
+```
 
 
 ## What is the average daily activity pattern?
+```{r}
+avg <- as.data.frame(tapply(data$steps, data$date, mean))
+names(avg) <- c("average_steps")
+```
 
+```{r}
+which.max(avg[,1])
+
+plot (
+    x    = as.Date(rownames(avg)),
+    y    = avg$average_steps,
+    type = "l",
+    xlab = "Interval Date",
+    ylab = "Average Steps"
+)
+```
 
 
 ## Imputing missing values
+
+Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+
+```{r}
+summary(data$steps)[7]
+```
+
 
 
 
