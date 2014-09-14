@@ -269,13 +269,48 @@ median(sum_fill$total_steps)
 
 ```r
 data_diff <- data_fill
+head(data_diff)
+```
 
+```
+##     steps       date interval
+## 1 1.71698 2012-10-01        0
+## 2 0.33962 2012-10-01        5
+## 3 0.13208 2012-10-01       10
+## 4 0.15094 2012-10-01       15
+## 5 0.07547 2012-10-01       20
+## 6 2.09434 2012-10-01       25
+```
+
+```r
+# The more intuitive way, but slower
+for (i in 1:length(data_diff[, 2])) {
+    if (weekdays(data_diff[i, 2])=="Saturday" | weekdays(data_diff[i, 2])=="Sunday") {
+        data_diff$type[i]<-'weekend'
+    } else {
+        data_diff$type[i]<-'weekday'
+    }
+}
+
+head(data_diff)
+```
+
+```
+##     steps       date interval    type
+## 1 1.71698 2012-10-01        0 weekday
+## 2 0.33962 2012-10-01        5 weekday
+## 3 0.13208 2012-10-01       10 weekday
+## 4 0.15094 2012-10-01       15 weekday
+## 5 0.07547 2012-10-01       20 weekday
+## 6 2.09434 2012-10-01       25 weekday
+```
+
+```r
+# A much faster way of doing it
 weekday <- weekdays(data_diff$date, abbreviate = FALSE)
 data_diff$type <- vector(length=length(data_diff$steps))
-
 data_diff$type[weekday=="Sunday" | weekday=="Saturday"] <- "weekend"
 data_diff$type[weekday!="Sunday" & weekday!="Saturday"] <- "weekday"
-
 data_diff$type <- as.factor(data_diff$type)
 
 head(data_diff)

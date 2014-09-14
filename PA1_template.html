@@ -407,13 +407,44 @@ plot (
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
 
 <pre><code class="r">data_diff &lt;- data_fill
+head(data_diff)
+</code></pre>
 
+<pre><code>##     steps       date interval
+## 1 1.71698 2012-10-01        0
+## 2 0.33962 2012-10-01        5
+## 3 0.13208 2012-10-01       10
+## 4 0.15094 2012-10-01       15
+## 5 0.07547 2012-10-01       20
+## 6 2.09434 2012-10-01       25
+</code></pre>
+
+<pre><code class="r"># The more intuitive way, but slower
+for (i in 1:length(data_diff[, 2])) {
+    if (weekdays(data_diff[i, 2])==&quot;Saturday&quot; | weekdays(data_diff[i, 2])==&quot;Sunday&quot;) {
+        data_diff$type[i]&lt;-&#39;weekend&#39;
+    } else {
+        data_diff$type[i]&lt;-&#39;weekday&#39;
+    }
+}
+
+head(data_diff)
+</code></pre>
+
+<pre><code>##     steps       date interval    type
+## 1 1.71698 2012-10-01        0 weekday
+## 2 0.33962 2012-10-01        5 weekday
+## 3 0.13208 2012-10-01       10 weekday
+## 4 0.15094 2012-10-01       15 weekday
+## 5 0.07547 2012-10-01       20 weekday
+## 6 2.09434 2012-10-01       25 weekday
+</code></pre>
+
+<pre><code class="r"># A much faster way of doing it
 weekday &lt;- weekdays(data_diff$date, abbreviate = FALSE)
 data_diff$type &lt;- vector(length=length(data_diff$steps))
-
 data_diff$type[weekday==&quot;Sunday&quot; | weekday==&quot;Saturday&quot;] &lt;- &quot;weekend&quot;
 data_diff$type[weekday!=&quot;Sunday&quot; &amp; weekday!=&quot;Saturday&quot;] &lt;- &quot;weekday&quot;
-
 data_diff$type &lt;- as.factor(data_diff$type)
 
 head(data_diff)
